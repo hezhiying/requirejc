@@ -21,7 +21,7 @@ bower install hezhiying/requirejc
 
 ```javascript
 //全局配制
-require({
+require.config({
     baseUrl:'/',
     paths:{
     	js1:'js1.js',
