@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Title</title>
+	<script src="../require.js"></script>
+</head>
+<body>
+<h1>Require Test</h1>
+<script>
+	require({
+		ver    : '0.0.1',
+		baseUrl: '/test/',
+		paths: {
+			js1:'js1',
+			js2:'js2.js',
+			js3:'js3.js',
+		},
+		dep  : {
+			js1:['js2','css!js1'],
+			js2:['js3'],
+		}
+	});
+	require('js1',function(){
+		console.log('这是最后显示');
+	})
+</script>
+</body>
+
+</html>

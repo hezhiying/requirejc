@@ -1,0 +1,19 @@
+{
+  "name": "requirejc",
+  "version": "1.0.0",
+  "_release": "1.0.0",
+  "description": "auto load js and css",
+  "main": "require.js",
+  "authors": [
+    "H <21418592@qq.com>"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/hezhiying/requirejs",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

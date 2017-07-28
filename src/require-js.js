@@ -1,0 +1,22 @@
+requireObj.isEqualUrl = function (url1,url2) {
+	return parseURL(url1).relative === parseURL(url2).relative
+};
+requireObj.loadJs = function(src,func) {
+	//判断这个js文件存在直接执行回调
+	let scripts = document.getElementsByTagName('script') ;
+	for(let i in scripts){
+		if(this.isEqualUrl(scripts[i].src,src))
+			return func() ;
+	}
+	let script = document.createElement('script') ;
+	script.type ='text/javascript' ;
+	script.src = src ;
+	let head = document.getElementsByTagName('head').item(0);
+	head.appendChild(script);
+
+	script.onload = function(){
+		if('function' === typeof func){
+			func();
+		}
+	}
+};
