@@ -8,7 +8,7 @@
 <body>
 <h1>Require Test</h1>
 <script>
-	require({
+	requirejc.config({
 		ver    : '0.0.1',
 		baseUrl: '/test/',
 		paths: {
@@ -21,7 +21,7 @@
 			js2:['js3'],
 		}
 	});
-	require('js1',function(){
+	requirejc('js1',function(){
 		console.log('这是最后显示');
 	})
 </script>

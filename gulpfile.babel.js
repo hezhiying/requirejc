@@ -28,7 +28,7 @@ gulp.task('build', ['js'], function () {
 });
 gulp.task('pro',['js'],function(){
 	console.log("compile js for production.");
-	gulp.src('js/require.js').pipe(uglify())
+	gulp.src('require.js').pipe(uglify())
 		.pipe(rename({
 			extname: '.min.js'
 		}))
@@ -38,10 +38,7 @@ gulp.task('pro',['js'],function(){
 gulp.task('js', [], function () {
 	console.log("compile js.");
 	let js = gulp.src([
-		'src/parseurl.js',
-		'src/main.js',
-		'src/require-js.js',
-		'src/require-css.js'
+		'src/**/*.js',
 	])
 		.pipe(babel({
 			presets: ['env']

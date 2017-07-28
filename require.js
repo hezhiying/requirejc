@@ -1,3 +1,193 @@
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+;(function (global, factory) {
+	(typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) === 'object' && typeof module !== 'undefined' ? module.exports = factory() : typeof define === 'function' && define.amd ? define(factory) : global.require = global.RequireJC = global.requirejc = factory();
+})(undefined || window, function () {
+	'use strict';
+
+	var _config = {
+		ver: '0.0.1', baseUrl: '', paths: {}, dep: {}
+	};
+
+	/**
+  * 修改配制参数
+  * @param opts
+  */
+	function config(opts) {
+		//Todo::可以进一步完善，实现path和dep有则修改，无则添加，并且不会影响原有配制参数
+		if ('undefined' === typeof opts) {
+			return _config;
+		}
+		var paths = { paths: Object.assign(_config.paths, opts.paths || {}) };
+		var dep = { dep: Object.assign(_config.dep, opts.dep || {}) };
+		_config = Object.assign(_config, opts, paths, dep);
+		//删除空paths
+		for (var key in _config.paths) {
+			if (!_config.paths[key]) {
+				console.log(_config.paths[key]);
+				delete _config.paths[key];
+			}
+		}
+		//删除空dep
+		for (var _key in _config.dep) {
+			if (!_config.dep[_key]) {
+				delete _config.dep[_key];
+			}
+		}
+	}
+
+	/**
+  * 入口函数
+  * @param names
+  * @param func
+  * @returns {*}
+  * @constructor
+  */
+	function RequireJC(names, func) {
+		if ('undefined' === typeof names) {
+			console.error("必须传入要加载依赖数组.\nexample:RequireJC(['js1','js2'],function(){})");
+			return;
+		}
+		names = array_wrap(names);
+		var name = names.shift();
+		if ('undefined' === typeof name) {
+			if ('function' === typeof func) {
+				return func();
+			}
+			console.log('没有callback方法');
+			return;
+		}
+
+		if (hasDep(name)) {
+			RequireJC(getDep(name), function () {
+				loadJsOrCss(name, function () {
+					return RequireJC(names, func);
+				});
+			});
+		} else {
+			loadJsOrCss(name, function () {
+				return RequireJC(names, func);
+			});
+		}
+	}
+
+	/**
+  * 加载单个脚本或样式
+  * @param name
+  * @param func
+  * @returns {*}
+  */
+	function loadJsOrCss(name, func) {
+		var url = toUrl(name);
+		if (isJS(name)) {
+			return RequireJC.loadJs(urlArgs(url), func);
+		} else {
+			return RequireJC.loadCss(urlArgs(url), func);
+		}
+	}
+
+	/**
+  * 脚本插件是否有其它依赖
+  * @param name
+  * @returns {boolean}
+  */
+	function hasDep(name) {
+		return 'undefined' !== typeof _config.dep[name];
+	}
+
+	/**
+  * 获取脚本的依赖信息
+  * @param name
+  * @returns {Array}
+  */
+	function getDep(name) {
+		return hasDep(name) ? _config.dep[name] : [];
+	}
+
+	/**
+  * 处理URL后缀
+  * @param url
+  * @returns {string}
+  */
+	function urlArgs(url) {
+		return url + '?ver=' + _config.ver;
+	}
+
+	/**
+  * 添加指定依赖关系
+  * @param name
+  * @param path
+  * @param dep
+  */
+	function addPath(name, path, dep) {
+		if (path) {
+			_config.paths[name] = path;
+		}
+		if (dep) {
+			_config.dep[name] = dep;
+		}
+	}
+
+	/**
+  * 确定给定的两个URL是否相同
+  * @param url1
+  * @param url2
+  * @returns {boolean}
+  */
+	function isEqualUrl(url1, url2) {
+		return parseURL(url1).relative === parseURL(url2).relative;
+	}
+
+	/**
+  * 确认是否JS文件
+  * @param name
+  * @returns {boolean}
+  */
+	function isJS(name) {
+		return toUrl(name).substr(-3) === '.js';
+	}
+
+	/**
+  * 返回最终脚本文件路径
+  * @param name
+  * @returns {*}
+  */
+	function toUrl(name) {
+		var url = _config.paths[name] || name;
+
+		if (url.substr(0, 4) === 'css!') {
+			url = url.substr(4);
+			if (url.substr(-4) !== ".css") {
+				url = url + ".css";
+			}
+		}
+
+		if (url.substr(-3) !== ".js" && url.substr(-4) !== ".css") {
+			url = url + ".js";
+		}
+
+		if (/^http|^https|^\//.test(url)) {
+			return url;
+		} else {
+			return _config.baseUrl + url;
+		}
+	}
+
+	RequireJC.config = config;
+	RequireJC.loadJsOrCss = loadJsOrCss;
+	RequireJC.isJS = isJS;
+	RequireJC.toUrl = toUrl;
+	RequireJC.isEqualUrl = isEqualUrl;
+	return RequireJC;
+});
+/**
+ * 如果给定的值不是数组，则将其包装在一个数组中
+ * @param name
+ * @returns {[*]}
+ */
+function array_wrap(name) {
+  return 'string' === typeof name ? [name] : name;
+}
 /**
  *@param {string} url 完整的URL地址
  *@returns {object} 自定义的对象
@@ -54,135 +244,6 @@ function parseURL(url) {
 		segments: a.pathname.replace(/^\//, '').split('/')
 	};
 }
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-var requireObj = {};
-
-requireObj.config = {
-	ver: '0.0.1',
-	baseUrl: '/test/',
-	paths: {
-		js1: 'js1',
-		js2: 'js2.js',
-		js3: 'js3.js',
-		daterangepicker: '/bower_components/bootstrap-daterangepicker/daterangepicker.js',
-		moment: '/bower_components/moment/moment.js'
-	},
-	dep: {
-		js1: ['js2', 'css!js1'],
-		js2: ['js3'],
-		daterangepicker: ['moment', '/bower_components/bootstrap-daterangepicker/daterangepicker.css']
-	}
-};
-
-requireObj.urlArgs = function (url) {
-	return url + '?ver=0.0.1';
-};
-
-requireObj.addPath = function (name, path, dep) {
-	if (path) {
-		requireObj.config.paths[name] = path;
-	}
-	if (dep) {
-		requireObj.config.dep[name] = dep;
-	}
-};
-requireObj.hasDep = function (name) {
-	return 'undefined' !== typeof requireObj.config.dep[name];
-};
-requireObj.getDep = function (name) {
-	return requireObj.config.dep[name];
-};
-
-requireObj.load = function (name, func) {
-	var url = requireObj.toUrl(name);
-	if (requireObj.isJS(name)) {
-		return requireObj.loadJs(requireObj.urlArgs(url), func);
-	} else {
-		return requireObj.loadCss(requireObj.urlArgs(url), func);
-	}
-};
-
-/**
- * 确认是否JS文件
- * @param name
- * @returns {boolean}
- */
-requireObj.isJS = function (name) {
-	return requireObj.toUrl(name).substr(-3) === '.js';
-};
-
-/**
- * 返回最终脚本文件路径
- * @param name
- * @returns {*}
- */
-requireObj.toUrl = function (name) {
-	var url = requireObj.config.paths[name] || name;
-
-	if (url.substr(0, 4) === 'css!') {
-		url = url.substr(4);
-		if (url.substr(-4) !== ".css") {
-			url = url + ".css";
-		}
-	}
-
-	if (url.substr(-3) !== ".js" && url.substr(-4) !== ".css") {
-		url = url + ".js";
-	}
-
-	if (/^http|^https|\//.test(url)) {
-		return url;
-	} else {
-		return requireObj.config.baseUrl + url;
-	}
-};
-
-window.require = function (names, func) {
-	if ((typeof names === 'undefined' ? 'undefined' : _typeof(names)) === 'object' && isNaN(names.length)) {
-		return Object.assign(requireObj.config, names);
-	}
-
-	if ('string' === typeof names) {
-		names = [names];
-	}
-	var name = names.shift();
-	if ('undefined' === typeof name) {
-		return func();
-	}
-	if (requireObj.hasDep(name)) {
-		require(requireObj.getDep(name), function () {
-			requireObj.load(name, function () {
-				return require(names, func);
-			});
-		});
-	} else {
-		requireObj.load(name, function () {
-			return require(names, func);
-		});
-	}
-};
-requireObj.isEqualUrl = function (url1, url2) {
-	return parseURL(url1).relative === parseURL(url2).relative;
-};
-requireObj.loadJs = function (src, func) {
-	//判断这个js文件存在直接执行回调
-	var scripts = document.getElementsByTagName('script');
-	for (var i in scripts) {
-		if (this.isEqualUrl(scripts[i].src, src)) return func();
-	}
-	var script = document.createElement('script');
-	script.type = 'text/javascript';
-	script.src = src;
-	var head = document.getElementsByTagName('head').item(0);
-	head.appendChild(script);
-
-	script.onload = function () {
-		if ('function' === typeof func) {
-			func();
-		}
-	};
-};
 var head = document.getElementsByTagName('head')[0];
 
 var engine = window.navigator.userAgent.match(/Trident\/([^ ;]*)|AppleWebKit\/([^ ;]*)|Opera\/([^ ;]*)|rv\:([^ ;]*)(.*?)Gecko\/([^ ;]*)|MSIE\s([^ ;]*)|AndroidWebKit\/([^ ;]*)/) || 0;
@@ -303,8 +364,26 @@ cssAPI.load = function (url, load) {
 	(useImportLoad ? importLoad : linkLoad)(url, load);
 };
 
-requireObj.loadCss = cssAPI.load;
+requirejc.loadCss = cssAPI.load;
 
 //cssAPI.load('/bower_components/bootstrap-daterangepicker/daterangepicker.css','succ');
 
 //>>excludeEnd('excludeRequireCss')
+requirejc.loadJs = function (src, func) {
+	//判断这个js文件存在直接执行回调
+	var scripts = document.getElementsByTagName('script');
+	for (var i in scripts) {
+		if (requirejc.isEqualUrl(scripts[i].src, src)) return func();
+	}
+	var script = document.createElement('script');
+	script.type = 'text/javascript';
+	script.src = src;
+	var head = document.getElementsByTagName('head').item(0);
+	head.appendChild(script);
+
+	script.onload = function () {
+		if ('function' === typeof func) {
+			func();
+		}
+	};
+};
