@@ -73,7 +73,7 @@ requireObj.toUrl = function(name){
 		url = url+".js";
 	}
 
-	if(/^http|^https|\//.test(url)){
+	if(/^http|^https|^\//.test(url)){
 		return url;
 	}else{
 		return requireObj.config.baseUrl+url;
