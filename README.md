@@ -40,3 +40,17 @@ require(['js1','http://localhost/xxx.css'],function(){
 })
 
 ```
+
+## 构建
+```bash
+npm install
+gulp build
+gulp pro
+gulp watch
+
+```
+## 预览
+
+> http://localhost:8000/demo/
+
+在chrome调试面板中可以直接调试
