@@ -3,6 +3,19 @@ RequireJC
 
 自动态加载js,css相关依赖文件
 
+## 安装
+> 1安装或下载:https://github.com/hezhiying/requirejc.git
+```bash
+bower install hezhiying/requirejc
+```
+>2引入requirejc.js
+
+```html
+	<script src="/bower_components/requirejc/require.js"></script>
+
+```
+>
+
 ## 使用
 
 
@@ -22,6 +35,8 @@ require({
 require('js1',function(){
 	console.log('加载成功');
 })
-
+require(['js1','http://localhost/xxx.css'],function(){
+	console.log('加载成功');
+})
 
 ```
