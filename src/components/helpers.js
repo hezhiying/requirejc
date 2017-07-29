@@ -3,6 +3,6 @@
  * @param name
  * @returns {[*]}
  */
-function array_wrap(name) {
+export function array_wrap(name) {
 	return 'string' === typeof name ? [name] : name;
 }

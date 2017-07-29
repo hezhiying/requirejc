@@ -1,5 +1,5 @@
 /*jshint esversion: 6 */
-let loadJs = function(src,func) {
+function loadJs(src,func) {
 	//判断这个js文件存在直接执行回调
 	let scripts = document.getElementsByTagName('script') ;
 	for(let i in scripts){
@@ -17,4 +17,5 @@ let loadJs = function(src,func) {
 			func();
 		}
 	};
-};
+}
+export default loadJs;

@@ -1,255 +1,271 @@
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+/******/ (function(modules) { // webpackBootstrap
+/******/ 	// The module cache
+/******/ 	var installedModules = {};
+/******/
+/******/ 	// The require function
+/******/ 	function __webpack_require__(moduleId) {
+/******/
+/******/ 		// Check if module is in cache
+/******/ 		if(installedModules[moduleId]) {
+/******/ 			return installedModules[moduleId].exports;
+/******/ 		}
+/******/ 		// Create a new module (and put it into the cache)
+/******/ 		var module = installedModules[moduleId] = {
+/******/ 			i: moduleId,
+/******/ 			l: false,
+/******/ 			exports: {}
+/******/ 		};
+/******/
+/******/ 		// Execute the module function
+/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
+/******/
+/******/ 		// Flag the module as loaded
+/******/ 		module.l = true;
+/******/
+/******/ 		// Return the exports of the module
+/******/ 		return module.exports;
+/******/ 	}
+/******/
+/******/
+/******/ 	// expose the modules object (__webpack_modules__)
+/******/ 	__webpack_require__.m = modules;
+/******/
+/******/ 	// expose the module cache
+/******/ 	__webpack_require__.c = installedModules;
+/******/
+/******/ 	// define getter function for harmony exports
+/******/ 	__webpack_require__.d = function(exports, name, getter) {
+/******/ 		if(!__webpack_require__.o(exports, name)) {
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
+/******/ 		}
+/******/ 	};
+/******/
+/******/ 	// getDefaultExport function for compatibility with non-harmony modules
+/******/ 	__webpack_require__.n = function(module) {
+/******/ 		var getter = module && module.__esModule ?
+/******/ 			function getDefault() { return module['default']; } :
+/******/ 			function getModuleExports() { return module; };
+/******/ 		__webpack_require__.d(getter, 'a', getter);
+/******/ 		return getter;
+/******/ 	};
+/******/
+/******/ 	// Object.prototype.hasOwnProperty.call
+/******/ 	__webpack_require__.o = function(object, property) { return Object.prototype.hasOwnProperty.call(object, property); };
+/******/
+/******/ 	// __webpack_public_path__
+/******/ 	__webpack_require__.p = "";
+/******/
+/******/ 	// Load entry module and return exports
+/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ })
+/************************************************************************/
+/******/ ([
+/* 0 */
+/***/ (function(module, exports, __webpack_require__) {
 
-/*jshint esversion: 6 */
+module.exports = __webpack_require__(1);
 
-;(function (global, factory) {
-	if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) === 'object' && typeof module !== 'undefined') {
-		module.exports = factory();
-	} else if (typeof define === 'function' && define.amd) {
-		define(factory);
-	} else {
-		global.require = global.RequireJC = global.requirejc = factory();
+
+/***/ }),
+/* 1 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_require_css_js__ = __webpack_require__(2);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_require_js_js__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_helpers_js__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_parseurl_js__ = __webpack_require__(5);
+
+
+
+
+'use strict';
+var _config = {
+	ver: '0.0.1', baseUrl: '', paths: {}, dep: {}
+};
+
+/**
+ * 修改配制参数
+ * @param opts
+ */
+function config(opts) {
+	if ('undefined' === typeof opts) {
+		return _config;
 	}
-})(undefined || window, function () {
-	'use strict';
-
-	var _config = {
-		ver: '0.0.1', baseUrl: '', paths: {}, dep: {}
-	};
-
-	/**
-  * 修改配制参数
-  * @param opts
-  */
-	function config(opts) {
-		if ('undefined' === typeof opts) {
-			return _config;
-		}
-		var paths = { paths: Object.assign(_config.paths, opts.paths || {}) };
-		var dep = { dep: Object.assign(_config.dep, opts.dep || {}) };
-		_config = Object.assign(_config, opts, paths, dep);
-		//删除空paths
-		for (var key in _config.paths) {
-			if (!_config.paths[key]) {
-				delete _config.paths[key];
-			}
-		}
-		//删除空dep
-		for (var _key in _config.dep) {
-			if (!_config.dep[_key]) {
-				delete _config.dep[_key];
-			}
+	var paths = { paths: Object.assign(_config.paths, opts.paths || {}) };
+	var dep = { dep: Object.assign(_config.dep, opts.dep || {}) };
+	_config = Object.assign(_config, opts, paths, dep);
+	//删除空paths
+	for (var key in _config.paths) {
+		if (!_config.paths[key]) {
+			console.log(_config.paths[key]);
+			delete _config.paths[key];
 		}
 	}
-
-	/**
-  * 入口函数
-  * @param names
-  * @param func
-  * @returns {*}
-  * @constructor
-  */
-	function RequireJC(names, func) {
-		if ('undefined' === typeof names) {
-			console.error("必须传入要加载依赖数组.\nexample:RequireJC(['js1','js2'],function(){})");
-			return;
+	//删除空dep
+	for (var _key in _config.dep) {
+		if (!_config.dep[_key]) {
+			delete _config.dep[_key];
 		}
-		names = array_wrap(names);
-		var name = names.shift();
-		if ('undefined' === typeof name) {
-			if ('function' === typeof func) {
-				return func();
-			}
-			console.log('没有callback方法');
-			return;
-		}
+	}
+}
 
-		if (hasDep(name)) {
-			RequireJC(getDep(name), function () {
-				loadJsOrCss(name, function () {
-					return RequireJC(names, func);
-				});
-			});
-		} else {
+/**
+ * 入口函数
+ * @param names
+ * @param func
+ * @returns {*}
+ * @constructor
+ */
+function RequireJC(names, func) {
+	if ('undefined' === typeof names) {
+		console.error("必须传入要加载依赖数组.\nexample:RequireJC(['js1','js2'],function(){})");
+		return;
+	}
+	names = Object(__WEBPACK_IMPORTED_MODULE_2__components_helpers_js__["a" /* array_wrap */])(names);
+	var name = names.shift();
+	if ('undefined' === typeof name) {
+		if ('function' === typeof func) {
+			return func();
+		}
+		console.log('没有callback方法');
+		return;
+	}
+
+	if (hasDep(name)) {
+		RequireJC(getDep(name), function () {
 			loadJsOrCss(name, function () {
 				return RequireJC(names, func);
 			});
-		}
+		});
+	} else {
+		loadJsOrCss(name, function () {
+			return RequireJC(names, func);
+		});
 	}
+}
 
-	/**
-  * 加载单个脚本或样式
-  * @param name
-  * @param func
-  * @returns {*}
-  */
-	function loadJsOrCss(name, func) {
-		var url = toUrl(name);
-		if (isJS(name)) {
-			return loadJs(urlArgs(url), func);
-		} else {
-			return loadCss(urlArgs(url), func);
-		}
-	}
-
-	/**
-  * 脚本插件是否有其它依赖
-  * @param name
-  * @returns {boolean}
-  */
-	function hasDep(name) {
-		return 'undefined' !== typeof _config.dep[name];
-	}
-
-	/**
-  * 获取脚本的依赖信息
-  * @param name
-  * @returns {Array}
-  */
-	function getDep(name) {
-		return hasDep(name) ? _config.dep[name] : [];
-	}
-
-	/**
-  * 处理URL后缀
-  * @param url
-  * @returns {string}
-  */
-	function urlArgs(url) {
-		return url + '?ver=' + _config.ver;
-	}
-
-	/**
-  * 添加指定依赖关系
-  * @param name
-  * @param path
-  * @param dep
-  */
-	function addPath(name, path, dep) {
-		if (path) {
-			_config.paths[name] = path;
-		}
-		if (dep) {
-			_config.dep[name] = dep;
-		}
-	}
-
-	/**
-  * 确定给定的两个URL是否相同
-  * @param url1
-  * @param url2
-  * @returns {boolean}
-  */
-	function isEqualUrl(url1, url2) {
-		return parseURL(url1).relative === parseURL(url2).relative;
-	}
-
-	/**
-  * 确认是否JS文件
-  * @param name
-  * @returns {boolean}
-  */
-	function isJS(name) {
-		return toUrl(name).substr(-3) === '.js';
-	}
-
-	/**
-  * 返回最终脚本文件路径
-  * @param name
-  * @returns {*}
-  */
-	function toUrl(name) {
-		var url = _config.paths[name] || name;
-
-		if (url.substr(0, 4) === 'css!') {
-			url = url.substr(4);
-			if (url.substr(-4) !== ".css") {
-				url = url + ".css";
-			}
-		}
-
-		if (url.substr(-3) !== ".js" && url.substr(-4) !== ".css") {
-			url = url + ".js";
-		}
-
-		if (/^http|^https|^\//.test(url)) {
-			return url;
-		} else {
-			return _config.baseUrl + url;
-		}
-	}
-
-	RequireJC.config = config;
-	RequireJC.loadJsOrCss = loadJsOrCss;
-	RequireJC.isJS = isJS;
-	RequireJC.toUrl = toUrl;
-	RequireJC.isEqualUrl = isEqualUrl;
-	return RequireJC;
-});
 /**
- * 如果给定的值不是数组，则将其包装在一个数组中
+ * 加载单个脚本或样式
  * @param name
- * @returns {[*]}
+ * @param func
+ * @returns {*}
  */
-function array_wrap(name) {
-  return 'string' === typeof name ? [name] : name;
+function loadJsOrCss(name, func) {
+	var url = toUrl(name);
+	if (isJS(name)) {
+		return RequireJC.loadJs(urlArgs(url), func);
+	} else {
+		return RequireJC.loadCss(urlArgs(url), func);
+	}
 }
+
 /**
- *@param {string} url 完整的URL地址
- *@returns {object} 自定义的对象
- *@description 用法示例：var myURL = parseURL('http://abc.com:8080/dir/index.html?id=255&m=hello#top');
- myURL.file='index.html'
-
- myURL.hash= 'top'
-
- myURL.host= 'abc.com'
-
- myURL.query= '?id=255&m=hello'
-
- myURL.params= Object = { id: 255, m: hello }
-
- myURL.path= '/dir/index.html'
-
- myURL.segments= Array = ['dir', 'index.html']
-
- myURL.port= '8080'
-
- myURL.protocol= 'http'
-
- myURL.source= 'http://abc.com:8080/dir/index.html?id=255&m=hello#top'
-
+ * 脚本插件是否有其它依赖
+ * @param name
+ * @returns {boolean}
  */
-function parseURL(url) {
-	var a = document.createElement('a');
-	a.href = url;
-	return {
-		source: url,
-		protocol: a.protocol.replace(':', ''),
-		host: a.hostname,
-		port: a.port,
-		query: a.search,
-		params: function () {
-			var ret = {},
-			    seg = a.search.replace(/^\?/, '').split('&'),
-			    len = seg.length,
-			    i = 0,
-			    s;
-			for (; i < len; i++) {
-				if (!seg[i]) {
-					continue;
-				}
-				s = seg[i].split('=');
-				ret[s[0]] = s[1];
-			}
-			return ret;
-		}(),
-		file: (a.pathname.match(/\/([^\/?#]+)$/i) || [undefined, ''])[1],
-		hash: a.hash.replace('#', ''),
-		path: a.pathname.replace(/^([^\/])/, '/$1'),
-		relative: (a.href.match(/tps?:\/\/[^\/]+(.+)/) || [undefined, ''])[1],
-		segments: a.pathname.replace(/^\//, '').split('/')
-	};
+function hasDep(name) {
+	return 'undefined' !== typeof _config.dep[name];
 }
+
+/**
+ * 获取脚本的依赖信息
+ * @param name
+ * @returns {Array}
+ */
+function getDep(name) {
+	return hasDep(name) ? _config.dep[name] : [];
+}
+
+/**
+ * 处理URL后缀
+ * @param url
+ * @returns {string}
+ */
+function urlArgs(url) {
+	return url + '?ver=' + _config.ver;
+}
+
+/**
+ * 添加指定依赖关系
+ * @param name
+ * @param path
+ * @param dep
+ */
+function addPath(name, path, dep) {
+	if (path) {
+		_config.paths[name] = path;
+	}
+	if (dep) {
+		_config.dep[name] = dep;
+	}
+}
+
+/**
+ * 确定给定的两个URL是否相同
+ * @param url1
+ * @param url2
+ * @returns {boolean}
+ */
+function isEqualUrl(url1, url2) {
+	return Object(__WEBPACK_IMPORTED_MODULE_3__components_parseurl_js__["a" /* parseURL */])(url1).relative === Object(__WEBPACK_IMPORTED_MODULE_3__components_parseurl_js__["a" /* parseURL */])(url2).relative;
+}
+
+/**
+ * 确认是否JS文件
+ * @param name
+ * @returns {boolean}
+ */
+function isJS(name) {
+	return toUrl(name).substr(-3) === '.js';
+}
+
+/**
+ * 返回最终脚本文件路径
+ * @param name
+ * @returns {*}
+ */
+function toUrl(name) {
+	var url = _config.paths[name] || name;
+
+	if (url.substr(0, 4) === 'css!') {
+		url = url.substr(4);
+		if (url.substr(-4) !== ".css") {
+			url = url + ".css";
+		}
+	}
+
+	if (url.substr(-3) !== ".js" && url.substr(-4) !== ".css") {
+		url = url + ".js";
+	}
+
+	if (/^http|^https|^\//.test(url)) {
+		return url;
+	} else {
+		return _config.baseUrl + url;
+	}
+}
+
+RequireJC.config = config;
+RequireJC.loadJsOrCss = loadJsOrCss;
+RequireJC.isJS = isJS;
+RequireJC.toUrl = toUrl;
+RequireJC.isEqualUrl = isEqualUrl;
+RequireJC.loadJs = __WEBPACK_IMPORTED_MODULE_1__components_require_js_js__["a" /* default */];
+RequireJC.loadCss = __WEBPACK_IMPORTED_MODULE_0__components_require_css_js__["a" /* default */];
+window.require = window.RequireJC = window.requirejc = RequireJC;
+
+/***/ }),
+/* 2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 var head = document.getElementsByTagName('head')[0];
 
 var engine = window.navigator.userAgent.match(/Trident\/([^ ;]*)|AppleWebKit\/([^ ;]*)|Opera\/([^ ;]*)|rv\:([^ ;]*)(.*?)Gecko\/([^ ;]*)|MSIE\s([^ ;]*)|AndroidWebKit\/([^ ;]*)/) || 0;
@@ -369,12 +385,19 @@ function loadCss(url, load) {
 
 	(useImportLoad ? importLoad : linkLoad)(url, load);
 };
-
+/* harmony default export */ __webpack_exports__["a"] = (loadCss);
 //requirejc.loadCss = cssAPI.load;
+//export default cssAPI.load;
 //cssAPI.load('/bower_components/bootstrap-daterangepicker/daterangepicker.css','succ');
 //>>excludeEnd('excludeRequireCss')
+
+/***/ }),
+/* 3 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 /*jshint esversion: 6 */
-var loadJs = function loadJs(src, func) {
+function loadJs(src, func) {
 	//判断这个js文件存在直接执行回调
 	var scripts = document.getElementsByTagName('script');
 	for (var i in scripts) {
@@ -391,4 +414,86 @@ var loadJs = function loadJs(src, func) {
 			func();
 		}
 	};
-};
+}
+/* harmony default export */ __webpack_exports__["a"] = (loadJs);
+
+/***/ }),
+/* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = array_wrap;
+/**
+ * 如果给定的值不是数组，则将其包装在一个数组中
+ * @param name
+ * @returns {[*]}
+ */
+function array_wrap(name) {
+  return 'string' === typeof name ? [name] : name;
+}
+
+/***/ }),
+/* 5 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = parseURL;
+/**
+ *@param {string} url 完整的URL地址
+ *@returns {object} 自定义的对象
+ *@description 用法示例：var myURL = parseURL('http://abc.com:8080/dir/index.html?id=255&m=hello#top');
+ myURL.file='index.html'
+
+ myURL.hash= 'top'
+
+ myURL.host= 'abc.com'
+
+ myURL.query= '?id=255&m=hello'
+
+ myURL.params= Object = { id: 255, m: hello }
+
+ myURL.path= '/dir/index.html'
+
+ myURL.segments= Array = ['dir', 'index.html']
+
+ myURL.port= '8080'
+
+ myURL.protocol= 'http'
+
+ myURL.source= 'http://abc.com:8080/dir/index.html?id=255&m=hello#top'
+
+ */
+function parseURL(url) {
+	var a = document.createElement('a');
+	a.href = url;
+	return {
+		source: url,
+		protocol: a.protocol.replace(':', ''),
+		host: a.hostname,
+		port: a.port,
+		query: a.search,
+		params: function () {
+			var ret = {},
+			    seg = a.search.replace(/^\?/, '').split('&'),
+			    len = seg.length,
+			    i = 0,
+			    s;
+			for (; i < len; i++) {
+				if (!seg[i]) {
+					continue;
+				}
+				s = seg[i].split('=');
+				ret[s[0]] = s[1];
+			}
+			return ret;
+		}(),
+		file: (a.pathname.match(/\/([^\/?#]+)$/i) || [undefined, ''])[1],
+		hash: a.hash.replace('#', ''),
+		path: a.pathname.replace(/^([^\/])/, '/$1'),
+		relative: (a.href.match(/tps?:\/\/[^\/]+(.+)/) || [undefined, ''])[1],
+		segments: a.pathname.replace(/^\//, '').split('/')
+	};
+}
+
+/***/ })
+/******/ ]);

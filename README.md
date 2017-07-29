@@ -21,7 +21,7 @@ bower install hezhiying/requirejc
 
 ```javascript
 //全局配制
-require.config({
+RequireJC.config({
     baseUrl:'/',
     paths:{
     	js1:'js1.js',
@@ -33,10 +33,14 @@ require.config({
     }
 });
 
-require('js1',function(){
+//获取配制
+let config = RequireJC.config();
+
+//使用
+RequireJC('js1',function(){
 	console.log('加载成功');
 })
-require(['js1','http://localhost/xxx.css'],function(){
+RequireJC(['js1','http://localhost/xxx.css'],function(){
 	console.log('加载成功');
 })
 
@@ -45,13 +49,16 @@ require(['js1','http://localhost/xxx.css'],function(){
 ## 构建
 ```bash
 npm install
-gulp build
-gulp pro
-gulp watch
+npm run dev  //生成require.js
+npm run prod //生成require.min.js
+#本地调试
+npm run hot 
 
 ```
+> 1.0分支使用gulp构建：[1.0-gulp](https://github.com/hezhiying/requirejc/tree/1.0-gulp)
+
 ## 预览
 
-> http://localhost:8000/demo/
+> http://localhost:8080/demo/
 
 在chrome调试面板中可以直接调试

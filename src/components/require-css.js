@@ -130,7 +130,8 @@ function loadCss(url, load) {
 	(useImportLoad ? importLoad : linkLoad)(url, load);
 
 };
-
+export default loadCss;
 //requirejc.loadCss = cssAPI.load;
+//export default cssAPI.load;
 //cssAPI.load('/bower_components/bootstrap-daterangepicker/daterangepicker.css','succ');
 //>>excludeEnd('excludeRequireCss')
