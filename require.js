@@ -1,7 +1,15 @@
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
+/*jshint esversion: 6 */
+
 ;(function (global, factory) {
-	(typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) === 'object' && typeof module !== 'undefined' ? module.exports = factory() : typeof define === 'function' && define.amd ? define(factory) : global.require = global.RequireJC = global.requirejc = factory();
+	if ((typeof exports === 'undefined' ? 'undefined' : _typeof(exports)) === 'object' && typeof module !== 'undefined') {
+		module.exports = factory();
+	} else if (typeof define === 'function' && define.amd) {
+		define(factory);
+	} else {
+		global.require = global.RequireJC = global.requirejc = factory();
+	}
 })(undefined || window, function () {
 	'use strict';
 
@@ -14,7 +22,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   * @param opts
   */
 	function config(opts) {
-		//Todo::可以进一步完善，实现path和dep有则修改，无则添加，并且不会影响原有配制参数
 		if ('undefined' === typeof opts) {
 			return _config;
 		}
@@ -24,7 +31,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 		//删除空paths
 		for (var key in _config.paths) {
 			if (!_config.paths[key]) {
-				console.log(_config.paths[key]);
 				delete _config.paths[key];
 			}
 		}
@@ -80,9 +86,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 	function loadJsOrCss(name, func) {
 		var url = toUrl(name);
 		if (isJS(name)) {
-			return RequireJC.loadJs(urlArgs(url), func);
+			return loadJs(urlArgs(url), func);
 		} else {
-			return RequireJC.loadCss(urlArgs(url), func);
+			return loadCss(urlArgs(url), func);
 		}
 	}
 
@@ -237,10 +243,10 @@ function parseURL(url) {
 			}
 			return ret;
 		}(),
-		file: (a.pathname.match(/\/([^\/?#]+)$/i) || [, ''])[1],
+		file: (a.pathname.match(/\/([^\/?#]+)$/i) || [undefined, ''])[1],
 		hash: a.hash.replace('#', ''),
 		path: a.pathname.replace(/^([^\/])/, '/$1'),
-		relative: (a.href.match(/tps?:\/\/[^\/]+(.+)/) || [, ''])[1],
+		relative: (a.href.match(/tps?:\/\/[^\/]+(.+)/) || [undefined, ''])[1],
 		segments: a.pathname.replace(/^\//, '').split('/')
 	};
 }
@@ -286,7 +292,7 @@ var createIeLoad = function createIeLoad(url) {
 	};
 
 	ieCnt++;
-	if (ieCnt == 31) {
+	if (ieCnt === 31) {
 		createStyle();
 		ieCnt = 0;
 	}
@@ -321,7 +327,7 @@ var importLoad = function importLoad(url, callback) {
 
 		var loadInterval = setInterval(function () {
 			try {
-				curStyle.sheet.cssRules;
+				var cssRules = curStyle.sheet.cssRules;
 				clearInterval(loadInterval);
 				callback();
 			} catch (e) {}
@@ -359,17 +365,16 @@ cssAPI.normalize = function (name, normalize) {
 };
 
 //>>excludeStart('excludeRequireCss', pragmas.excludeRequireCss)
-cssAPI.load = function (url, load) {
+function loadCss(url, load) {
 
 	(useImportLoad ? importLoad : linkLoad)(url, load);
 };
 
-requirejc.loadCss = cssAPI.load;
-
+//requirejc.loadCss = cssAPI.load;
 //cssAPI.load('/bower_components/bootstrap-daterangepicker/daterangepicker.css','succ');
-
 //>>excludeEnd('excludeRequireCss')
-requirejc.loadJs = function (src, func) {
+/*jshint esversion: 6 */
+var loadJs = function loadJs(src, func) {
 	//判断这个js文件存在直接执行回调
 	var scripts = document.getElementsByTagName('script');
 	for (var i in scripts) {

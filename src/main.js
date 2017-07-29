@@ -1,7 +1,14 @@
+/*jshint esversion: 6 */
+
 ;(function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
-		typeof define === 'function' && define.amd ? define(factory) :
-			global.require = global.RequireJC = global.requirejc = factory()
+	if(typeof exports === 'object' && typeof module !== 'undefined'){
+		module.exports = factory();
+	}else if(typeof define === 'function' && define.amd ){
+		define(factory);
+	}else{
+		global.require = global.RequireJC = global.requirejc = factory();
+	}
+
 }(this || window, (function () {
 	'use strict';
 	let _config = {
@@ -22,7 +29,6 @@
 		//删除空paths
 		for(let key in _config.paths){
 			if(!_config.paths[key]){
-				console.log(_config.paths[key]);
 				delete _config.paths[key];
 			}
 		}
@@ -59,13 +65,13 @@
 		if (hasDep(name)) {
 			RequireJC(getDep(name), function () {
 				loadJsOrCss(name, function () {
-					return RequireJC(names, func)
-				})
-			})
+					return RequireJC(names, func);
+				});
+			});
 		} else {
 			loadJsOrCss(name, function () {
-				return RequireJC(names, func)
-			})
+				return RequireJC(names, func);
+			});
 		}
 
 	}
@@ -79,9 +85,9 @@
 	function loadJsOrCss(name, func) {
 		let url = toUrl(name);
 		if (isJS(name)) {
-			return RequireJC.loadJs(urlArgs(url), func);
+			return loadJs(urlArgs(url), func);
 		} else {
-			return RequireJC.loadCss(urlArgs(url), func);
+			return loadCss(urlArgs(url), func);
 		}
 	}
 
@@ -134,7 +140,7 @@
 	 * @returns {boolean}
 	 */
 	function isEqualUrl(url1, url2) {
-		return parseURL(url1).relative === parseURL(url2).relative
+		return parseURL(url1).relative === parseURL(url2).relative;
 	}
 
 	/**
@@ -143,7 +149,7 @@
 	 * @returns {boolean}
 	 */
 	function isJS(name) {
-		return toUrl(name).substr(-3) === '.js'
+		return toUrl(name).substr(-3) === '.js';
 	}
 
 	/**

@@ -1,5 +1,5 @@
 {
-  "name": "zine/require",
+  "name": "requirejc",
   "version": "1.0.0",
   "description": "auto require utils",
   "devDependencies": {

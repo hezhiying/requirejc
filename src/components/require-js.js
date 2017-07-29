@@ -1,4 +1,5 @@
-requirejc.loadJs = function(src,func) {
+/*jshint esversion: 6 */
+let loadJs = function(src,func) {
 	//判断这个js文件存在直接执行回调
 	let scripts = document.getElementsByTagName('script') ;
 	for(let i in scripts){
@@ -15,5 +16,5 @@ requirejc.loadJs = function(src,func) {
 		if('function' === typeof func){
 			func();
 		}
-	}
+	};
 };

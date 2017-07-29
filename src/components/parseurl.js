@@ -43,10 +43,10 @@ function parseURL(url) {
 			}
 			return ret;
 		})(),
-		file: (a.pathname.match(/\/([^\/?#]+)$/i) || [,''])[1],
+		file: (a.pathname.match(/\/([^\/?#]+)$/i) || [undefined,''])[1],
 		hash: a.hash.replace('#',''),
 		path: a.pathname.replace(/^([^\/])/,'/$1'),
-		relative: (a.href.match(/tps?:\/\/[^\/]+(.+)/) || [,''])[1],
+		relative: (a.href.match(/tps?:\/\/[^\/]+(.+)/) || [undefined,''])[1],
 		segments: a.pathname.replace(/^\//,'').split('/')
 	};
 }

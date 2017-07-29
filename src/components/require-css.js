@@ -31,7 +31,7 @@ var createStyle = function () {
 	curStyle = document.createElement('style');
 	head.appendChild(curStyle);
 	curSheet = curStyle.styleSheet || curStyle.sheet;
-}
+};
 var ieCnt       = 0;
 var ieLoads     = [];
 var ieCurCallback;
@@ -39,15 +39,15 @@ var ieCurCallback;
 var createIeLoad  = function (url) {
 	curSheet.addImport(url);
 	curStyle.onload = function () {
-		processIeLoad()
+		processIeLoad();
 	};
 
 	ieCnt++;
-	if (ieCnt == 31) {
+	if (ieCnt === 31) {
 		createStyle();
 		ieCnt = 0;
 	}
-}
+};
 var processIeLoad = function () {
 	ieCurCallback();
 
@@ -60,7 +60,7 @@ var processIeLoad = function () {
 
 	ieCurCallback = nextLoad[1];
 	createIeLoad(nextLoad[0]);
-}
+};
 var importLoad    = function (url, callback) {
 	if (!curSheet || !curSheet.addImport)
 		createStyle();
@@ -81,14 +81,14 @@ var importLoad    = function (url, callback) {
 
 		var loadInterval = setInterval(function () {
 			try {
-				curStyle.sheet.cssRules;
+				var cssRules = curStyle.sheet.cssRules;
 				clearInterval(loadInterval);
 				callback();
 			} catch (e) {
 			}
 		}, 10);
 	}
-}
+};
 
 // <link> load method
 var linkLoad = function (url, callback) {
@@ -101,7 +101,7 @@ var linkLoad = function (url, callback) {
 			};
 			// for style dimensions queries, a short delay can still be necessary
 			setTimeout(callback, 7);
-		}
+		};
 	else
 		var loadInterval = setInterval(function () {
 			for (var i = 0; i < document.styleSheets.length; i++) {
@@ -114,7 +114,7 @@ var linkLoad = function (url, callback) {
 		}, 10);
 	link.href = url;
 	head.appendChild(link);
-}
+};
 
 //>>excludeEnd('excludeRequireCss')
 cssAPI.normalize = function (name, normalize) {
@@ -125,14 +125,12 @@ cssAPI.normalize = function (name, normalize) {
 };
 
 //>>excludeStart('excludeRequireCss', pragmas.excludeRequireCss)
-cssAPI.load = function (url, load) {
+function loadCss(url, load) {
 
 	(useImportLoad ? importLoad : linkLoad)(url, load);
 
 };
 
-requirejc.loadCss = cssAPI.load;
-
+//requirejc.loadCss = cssAPI.load;
 //cssAPI.load('/bower_components/bootstrap-daterangepicker/daterangepicker.css','succ');
-
 //>>excludeEnd('excludeRequireCss')
