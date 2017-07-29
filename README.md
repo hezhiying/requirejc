@@ -4,14 +4,14 @@ RequireJC
 动态加载js,css相关依赖文件
 
 ## 安装
-> 1安装或下载:https://github.com/hezhiying/requirejc.git
+> 1.安装或下载:https://github.com/hezhiying/requirejc.git
 ```bash
 bower install hezhiying/requirejc
 ```
->2引入requirejc.js
+> 2.引入requirejc.js
 
 ```html
-	<script src="/bower_components/requirejc/require.js"></script>
+	<script type="text/javascript" src="/bower_components/requirejc/require.js"></script>
 
 ```
 >
