@@ -1,7 +1,7 @@
 RequireJC
 ============
 
-自动态加载js,css相关依赖文件
+动态加载js,css相关依赖文件
 
 ## 安装
 > 1安装或下载:https://github.com/hezhiying/requirejc.git
@@ -27,6 +27,7 @@ require.config({
     	js1:'js1.js',
     	js2:'js2.js'
     },
+    //js对应的依赖关系
     dep:{
     	js1:['js2','js1.css']
     }
