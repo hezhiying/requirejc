@@ -102,14 +102,13 @@ function config(opts) {
 	_config = Object.assign(_config, opts, paths, dep);
 	//删除空paths
 	for (var key in _config.paths) {
-		if (!_config.paths[key]) {
-			console.log(_config.paths[key]);
+		if (_config.paths.hasOwnProperty(key) && !_config.paths[key]) {
 			delete _config.paths[key];
 		}
 	}
 	//删除空dep
 	for (var _key in _config.dep) {
-		if (!_config.dep[_key]) {
+		if (_config.dep.hasOwnProperty(_key) && !_config.dep[_key]) {
 			delete _config.dep[_key];
 		}
 	}
@@ -158,6 +157,9 @@ function RequireJC(names, func) {
  */
 function loadJsOrCss(name, func) {
 	var url = toUrl(name);
+	if (!name) {
+		func();
+	}
 	if (isJS(name)) {
 		return RequireJC.loadJs(urlArgs(url), func);
 	} else {

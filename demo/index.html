@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>Title</title>
+	<title>RequireJC Demo</title>
 	<script src="../require.js"></script>
 </head>
 <body>
 <h1>Require Test</h1>
 <script>
-	requirejc.config({
+	RequireJC.config({
 		ver    : '0.0.1',
 		baseUrl: '/test/',
 		paths: {
@@ -21,7 +21,7 @@
 			js2:['js3'],
 		}
 	});
-	requirejc('js1',function(){
+	RequireJC('js1',function(){
 		console.log('这是最后显示');
 	})
 </script>
