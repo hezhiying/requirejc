@@ -13,7 +13,6 @@
 	 * @param opts
 	 */
 	function config(opts) {
-		//Todo::可以进一步完善，实现path和dep有则修改，无则添加，并且不会影响原有配制参数
 		if ('undefined' === typeof opts) {
 			return _config;
 		}
