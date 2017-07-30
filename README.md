@@ -3,7 +3,7 @@ RequireJC
 [![Build Status](https://travis-ci.org/hezhiying/requirejc.svg?branch=master)](https://travis-ci.org/hezhiying/requirejc)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 
-动态加载js,css相关依赖文件
+一个非常宽松的依赖加载插件，本身也不依赖任何其它框架。对加载的JS没有特别的要求，只是直接地动态加载到网页中。非常适合做后台一类的项目，这些项目一般都会使用大量的外部jquery插件，而无需在首页一次性加载进来而是可以按需加载JS和CSS.
 
 ## 安装
 > 1.安装或下载:https://github.com/hezhiying/requirejc.git
