@@ -158,7 +158,7 @@ function RequireJC(names, func) {
 function loadJsOrCss(name, func) {
 	var url = toUrl(name);
 	if (!name) {
-		func();
+		return func();
 	}
 	if (isJS(name)) {
 		return RequireJC.loadJs(urlArgs(url), func);

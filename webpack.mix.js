@@ -14,7 +14,7 @@ let mix = require('laravel-mix');
 //mix.js('resources/assets/js/app.js', 'public/js')
 //   .sass('resources/assets/sass/app.scss', 'public/css');
 if(mix.config.production){
-	mix.js('src/main.js', 'require.min.js');
+	mix.js('src/main.js', 'requirejc.min.js');
 }else{
-	mix.js('src/main.js', 'require.js');
+	mix.js('src/main.js', 'requirejc.js');
 }
