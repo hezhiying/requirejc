@@ -13,7 +13,7 @@ bower install hezhiying/requirejc
 > 2.引入requirejc.js
 
 ```html
-	<script type="text/javascript" src="/bower_components/requirejc/require.js"></script>
+	<script type="text/javascript" src="/bower_components/requirejc/requirejc.js"></script>
 
 ```
 >
@@ -51,8 +51,8 @@ RequireJC(['js1','http://localhost/xxx.css'],function(){
 ## 构建
 ```bash
 npm install
-npm run dev  //生成require.js
-npm run prod //生成require.min.js
+npm run dev  //生成requirejc.js
+npm run prod //生成requirejc.min.js
 #本地调试
 npm run hot 
 
