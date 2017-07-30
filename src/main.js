@@ -3,7 +3,7 @@ import loadJs from './components/require-js.js';
 import {array_wrap,isEqualUrl} from './components/helpers.js';
 'use strict';
 let _config = {
-	ver: 'v1.0.0', debug:false, baseUrl: '', paths: {}, dep: {}
+	ver: 'v1.0.0', debug:false, baseUrl: '', paths: {}, dep: {}, map:undefined
 };
 /**
  * 修改配制参数
@@ -64,7 +64,17 @@ function RequireJC(names, func) {
 		console.error("必须传入要加载依赖数组.\nexample:RequireJC(['js1','js2'],function(){})");
 		return;
 	}
+
 	names    = array_wrap(names);
+	//如果有全局
+	if(_config['map']){
+		let map = array_wrap(_config['map']);
+		_config['map'] = undefined;
+		return RequireJC(map,function(){
+			return RequireJC(names, func);
+		})
+	}
+
 	let name = names.shift();
 	if ('undefined' === typeof name) {
 		if ('function' === typeof func) {
@@ -75,13 +85,13 @@ function RequireJC(names, func) {
 	}
 
 	if (hasDep(name)) {
-		RequireJC(getDep(name), function () {
+		return RequireJC(getDep(name), function () {
 			loadJsOrCss(name, function () {
 				return RequireJC(names, func);
 			});
 		});
 	} else {
-		loadJsOrCss(name, function () {
+		return loadJsOrCss(name, function () {
 			return RequireJC(names, func);
 		});
 	}

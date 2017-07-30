@@ -29,12 +29,16 @@ RequireJC.config({
     debug  : false,
     paths:{
     	js1:'js1.js',
-    	js2:'js2.js'
+    	js2:'js2.js',
+    	js4:'js4.js'
     },
     //js对应的依赖关系
     dep:{
     	js1:['js2','js1.css']
-    }
+    },
+    //全局映射所有依赖加载前先加载的插件
+    map:['js4']
+    
 });
 
 //获取配制
@@ -55,6 +59,13 @@ RequireJC.addPath(name,path,dep);
 RequireJC.toUrl(name); //获取实际加载的URL
 
 ```
+## Features
+
+- 支持JS和CSS.
+- 支持相互依赖.
+- 对加载的JS和CSS文件没有特别要求，宽松的加载（和html中script方式加载一样).
+- 支持全局优先加载，所有插件加载前优先加载.
+- 支持调试模式，调试模式下加载时不会有缓存.
 
 ## 构建
 ```bash
@@ -72,3 +83,4 @@ npm run hot
 > http://localhost:8080/demo/
 
 在chrome调试面板中可以直接调试
+

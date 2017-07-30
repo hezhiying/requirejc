@@ -24,7 +24,7 @@
 
  */
 export function parseURL(url) {
-	var a  = document.createElement('a');
+	let a  = document.createElement('a');
 	a.href = url;
 	return {
 		source  : url,
@@ -33,7 +33,7 @@ export function parseURL(url) {
 		port    : a.port,
 		query   : a.search,
 		params  : (function () {
-			var ret                 = {},
+			let ret                 = {},
 				seg                 = a.search.replace(/^\?/, '').split('&'),
 				len = seg.length, i = 0, s;
 			for (; i < len; i++) {

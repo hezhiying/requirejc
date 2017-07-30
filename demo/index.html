@@ -9,7 +9,7 @@
 <h1>Require Test</h1>
 <script>
 	//调试模式，每次加载不会有缓存问题
-	RequireJC.debug(true);
+	RequireJC.debug(false);
 	RequireJC.config({
 		ver    : 'v0.0.1',
 		baseUrl: '/test/',
@@ -20,8 +20,10 @@
 		},
 		dep  : {
 			js1:['js2','css!js1'],
-			js2:['js3'],
-		}
+			js2:['js1'],
+			js3:['js2'],
+		},
+		map:'js4'
 	});
 	RequireJC('js1',function(){
 		console.log('这是最后显示');

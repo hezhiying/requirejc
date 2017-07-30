@@ -70,7 +70,7 @@
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = array_wrap;
 /* harmony export (immutable) */ __webpack_exports__["b"] = isEqualUrl;
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__parseurl__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__parseurl__ = __webpack_require__(4);
 
 
 /**
@@ -106,14 +106,14 @@ module.exports = __webpack_require__(2);
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_require_css_js__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_require_js_js__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_require_js_js__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_helpers_js__ = __webpack_require__(0);
 
 
 
 'use strict';
 var _config = {
-	ver: 'v1.0.0', debug: false, baseUrl: '', paths: {}, dep: {}
+	ver: 'v1.0.0', debug: false, baseUrl: '', paths: {}, dep: {}, map: undefined
 };
 /**
  * 修改配制参数
@@ -174,7 +174,17 @@ function RequireJC(names, func) {
 		console.error("必须传入要加载依赖数组.\nexample:RequireJC(['js1','js2'],function(){})");
 		return;
 	}
+
 	names = Object(__WEBPACK_IMPORTED_MODULE_2__components_helpers_js__["a" /* array_wrap */])(names);
+	//如果有全局
+	if (_config['map']) {
+		var map = Object(__WEBPACK_IMPORTED_MODULE_2__components_helpers_js__["a" /* array_wrap */])(_config['map']);
+		_config['map'] = undefined;
+		return RequireJC(map, function () {
+			return RequireJC(names, func);
+		});
+	}
+
 	var name = names.shift();
 	if ('undefined' === typeof name) {
 		if ('function' === typeof func) {
@@ -185,13 +195,13 @@ function RequireJC(names, func) {
 	}
 
 	if (hasDep(name)) {
-		RequireJC(getDep(name), function () {
+		return RequireJC(getDep(name), function () {
 			loadJsOrCss(name, function () {
 				return RequireJC(names, func);
 			});
 		});
 	} else {
-		loadJsOrCss(name, function () {
+		return loadJsOrCss(name, function () {
 			return RequireJC(names, func);
 		});
 	}
@@ -316,6 +326,10 @@ window.require = window.RequireJC = window.requirejc = RequireJC;
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = loadCss;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__helpers__ = __webpack_require__(0);
+
+
 var head = document.getElementsByTagName('head')[0];
 
 var engine = window.navigator.userAgent.match(/Trident\/([^ ;]*)|AppleWebKit\/([^ ;]*)|Opera\/([^ ;]*)|rv\:([^ ;]*)(.*?)Gecko\/([^ ;]*)|MSIE\s([^ ;]*)|AndroidWebKit\/([^ ;]*)/) || 0;
@@ -334,14 +348,12 @@ else if (engine[2] || engine[8] || 'WebkitAppearance' in document.documentElemen
 	else if (engine[4]) useImportLoad = parseInt(engine[4]) < 18;
 
 //>>excludeEnd('excludeRequireCss')
-//main api object
-var cssAPI = {};
-
 //>>excludeStart('excludeRequireCss', pragmas.excludeRequireCss)
 //cssAPI.pluginBuilder = './css-builder';
 
 // <style> @import load method
-var curStyle, curSheet;
+var curStyle = void 0,
+    curSheet = void 0;
 var createStyle = function createStyle() {
 	curStyle = document.createElement('style');
 	head.appendChild(curStyle);
@@ -349,7 +361,7 @@ var createStyle = function createStyle() {
 };
 var ieCnt = 0;
 var ieLoads = [];
-var ieCurCallback;
+var ieCurCallback = void 0;
 
 var createIeLoad = function createIeLoad(url) {
 	curSheet.addImport(url);
@@ -403,75 +415,45 @@ var importLoad = function importLoad(url, callback) {
 
 // <link> load method
 var linkLoad = function linkLoad(url, callback) {
+	var links = document.getElementsByTagName('link');
+	for (var _link in links) {
+		if (links.hasOwnProperty(_link) && Object(__WEBPACK_IMPORTED_MODULE_0__helpers__["b" /* isEqualUrl */])(links[_link].href, url)) return callback();
+	}
 	var link = document.createElement('link');
 	link.type = 'text/css';
 	link.rel = 'stylesheet';
-	if (useOnload) link.onload = function () {
-		link.onload = function () {};
-		// for style dimensions queries, a short delay can still be necessary
-		setTimeout(callback, 7);
-	};else var loadInterval = setInterval(function () {
-		for (var i = 0; i < document.styleSheets.length; i++) {
-			var sheet = document.styleSheets[i];
-			if (sheet.href == link.href) {
-				clearInterval(loadInterval);
-				return callback();
+	if (useOnload) {
+		link.onload = function () {
+			link.onload = function () {};
+			// for style dimensions queries, a short delay can still be necessary
+			setTimeout(callback, 7);
+		};
+	} else {
+		var loadInterval = setInterval(function () {
+			for (var i = 0; i < document.styleSheets.length; i++) {
+				var sheet = document.styleSheets[i];
+				if (sheet.href === link.href) {
+					clearInterval(loadInterval);
+					return callback();
+				}
 			}
-		}
-	}, 10);
+		}, 10);
+	}
+
 	link.href = url;
 	head.appendChild(link);
 };
 
-//>>excludeEnd('excludeRequireCss')
-cssAPI.normalize = function (name, normalize) {
-	if (name.substr(name.length - 4, 4) === '.css') name = name.substr(0, name.length - 4);
-
-	return normalize(name);
-};
-
 //>>excludeStart('excludeRequireCss', pragmas.excludeRequireCss)
+//入口
 function loadCss(url, load) {
 
 	(useImportLoad ? importLoad : linkLoad)(url, load);
-};
-/* harmony default export */ __webpack_exports__["a"] = (loadCss);
-//requirejc.loadCss = cssAPI.load;
-//export default cssAPI.load;
-//cssAPI.load('/bower_components/bootstrap-daterangepicker/daterangepicker.css','succ');
+}
 //>>excludeEnd('excludeRequireCss')
 
 /***/ }),
 /* 4 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__helpers__ = __webpack_require__(0);
-
-
-/*jshint esversion: 6 */
-function loadJs(src, func) {
-	//判断这个js文件存在直接执行回调
-	var scripts = document.getElementsByTagName('script');
-	for (var i in scripts) {
-		if (scripts.hasOwnProperty(i) && Object(__WEBPACK_IMPORTED_MODULE_0__helpers__["b" /* isEqualUrl */])(scripts[i].src, src)) return func();
-	}
-	var script = document.createElement('script');
-	script.type = 'text/javascript';
-	script.src = src;
-	var head = document.getElementsByTagName('head').item(0);
-	head.appendChild(script);
-
-	script.onload = function () {
-		if ('function' === typeof func) {
-			func();
-		}
-	};
-}
-/* harmony default export */ __webpack_exports__["a"] = (loadJs);
-
-/***/ }),
-/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -515,7 +497,7 @@ function parseURL(url) {
 			    seg = a.search.replace(/^\?/, '').split('&'),
 			    len = seg.length,
 			    i = 0,
-			    s;
+			    s = void 0;
 			for (; i < len; i++) {
 				if (!seg[i]) {
 					continue;
@@ -530,6 +512,36 @@ function parseURL(url) {
 		path: a.pathname.replace(/^([^\/])/, '/$1'),
 		relative: (a.href.match(/tps?:\/\/[^\/]+(.+)/) || [undefined, ''])[1],
 		segments: a.pathname.replace(/^\//, '').split('/')
+	};
+}
+
+/***/ }),
+/* 5 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = loadJs;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__helpers__ = __webpack_require__(0);
+
+
+/*jshint esversion: 6 */
+//入口
+function loadJs(src, func) {
+	//判断这个js文件存在直接执行回调
+	var scripts = document.getElementsByTagName('script');
+	for (var i in scripts) {
+		if (scripts.hasOwnProperty(i) && Object(__WEBPACK_IMPORTED_MODULE_0__helpers__["b" /* isEqualUrl */])(scripts[i].src, src)) return func();
+	}
+	var script = document.createElement('script');
+	script.type = 'text/javascript';
+	script.src = src;
+	var head = document.getElementsByTagName('head').item(0);
+	head.appendChild(script);
+
+	script.onload = function () {
+		if ('function' === typeof func) {
+			func();
+		}
 	};
 }
 

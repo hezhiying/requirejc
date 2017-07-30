@@ -1,12 +1,14 @@
-var head = document.getElementsByTagName('head')[0];
+import {isEqualUrl} from './helpers';
 
-var engine = window.navigator.userAgent.match(/Trident\/([^ ;]*)|AppleWebKit\/([^ ;]*)|Opera\/([^ ;]*)|rv\:([^ ;]*)(.*?)Gecko\/([^ ;]*)|MSIE\s([^ ;]*)|AndroidWebKit\/([^ ;]*)/) || 0;
+let head = document.getElementsByTagName('head')[0];
+
+let engine = window.navigator.userAgent.match(/Trident\/([^ ;]*)|AppleWebKit\/([^ ;]*)|Opera\/([^ ;]*)|rv\:([^ ;]*)(.*?)Gecko\/([^ ;]*)|MSIE\s([^ ;]*)|AndroidWebKit\/([^ ;]*)/) || 0;
 
 // use <style> @import load method (IE < 9, Firefox < 18)
-var useImportLoad = false;
+let useImportLoad = false;
 
 // set to false for explicit <link> load checking when onload doesn't work perfectly (webkit)
-var useOnload = true;
+let useOnload = true;
 
 // trident / msie
 if (engine[1] || engine[7])
@@ -19,24 +21,21 @@ else if (engine[4])
 	useImportLoad = parseInt(engine[4]) < 18;
 
 //>>excludeEnd('excludeRequireCss')
-//main api object
-var cssAPI = {};
-
 //>>excludeStart('excludeRequireCss', pragmas.excludeRequireCss)
 //cssAPI.pluginBuilder = './css-builder';
 
 // <style> @import load method
-var curStyle, curSheet;
-var createStyle = function () {
+let curStyle, curSheet;
+let createStyle = function () {
 	curStyle = document.createElement('style');
 	head.appendChild(curStyle);
 	curSheet = curStyle.styleSheet || curStyle.sheet;
 };
-var ieCnt       = 0;
-var ieLoads     = [];
-var ieCurCallback;
+let ieCnt       = 0;
+let ieLoads     = [];
+let ieCurCallback;
 
-var createIeLoad  = function (url) {
+let createIeLoad  = function (url) {
 	curSheet.addImport(url);
 	curStyle.onload = function () {
 		processIeLoad();
@@ -48,10 +47,10 @@ var createIeLoad  = function (url) {
 		ieCnt = 0;
 	}
 };
-var processIeLoad = function () {
+let processIeLoad = function () {
 	ieCurCallback();
 
-	var nextLoad = ieLoads.shift();
+	let nextLoad = ieLoads.shift();
 
 	if (!nextLoad) {
 		ieCurCallback = null;
@@ -61,7 +60,7 @@ var processIeLoad = function () {
 	ieCurCallback = nextLoad[1];
 	createIeLoad(nextLoad[0]);
 };
-var importLoad    = function (url, callback) {
+let importLoad    = function (url, callback) {
 	if (!curSheet || !curSheet.addImport)
 		createStyle();
 
@@ -79,9 +78,9 @@ var importLoad    = function (url, callback) {
 		// old Firefox
 		curStyle.textContent = '@import "' + url + '";';
 
-		var loadInterval = setInterval(function () {
+		let loadInterval = setInterval(function () {
 			try {
-				var cssRules = curStyle.sheet.cssRules;
+				let cssRules = curStyle.sheet.cssRules;
 				clearInterval(loadInterval);
 				callback();
 			} catch (e) {
@@ -91,47 +90,44 @@ var importLoad    = function (url, callback) {
 };
 
 // <link> load method
-var linkLoad = function (url, callback) {
-	var link  = document.createElement('link');
+let linkLoad = function (url, callback) {
+	let links = document.getElementsByTagName('link');
+	for (let link in links) {
+		if (links.hasOwnProperty(link) && isEqualUrl(links[link].href, url))
+			return callback();
+	}
+	let link  = document.createElement('link');
 	link.type = 'text/css';
 	link.rel  = 'stylesheet';
-	if (useOnload)
+	if (useOnload) {
 		link.onload = function () {
 			link.onload = function () {
 			};
 			// for style dimensions queries, a short delay can still be necessary
 			setTimeout(callback, 7);
 		};
-	else
-		var loadInterval = setInterval(function () {
-			for (var i = 0; i < document.styleSheets.length; i++) {
-				var sheet = document.styleSheets[i];
-				if (sheet.href == link.href) {
+	}
+	else {
+		let loadInterval = setInterval(function () {
+			for (let i = 0; i < document.styleSheets.length; i++) {
+				let sheet = document.styleSheets[i];
+				if (sheet.href === link.href) {
 					clearInterval(loadInterval);
 					return callback();
 				}
 			}
 		}, 10);
+	}
+
 	link.href = url;
 	head.appendChild(link);
 };
 
-//>>excludeEnd('excludeRequireCss')
-cssAPI.normalize = function (name, normalize) {
-	if (name.substr(name.length - 4, 4) === '.css')
-		name = name.substr(0, name.length - 4);
-
-	return normalize(name);
-};
-
 //>>excludeStart('excludeRequireCss', pragmas.excludeRequireCss)
-function loadCss(url, load) {
+//入口
+export default function loadCss(url, load) {
 
 	(useImportLoad ? importLoad : linkLoad)(url, load);
 
-};
-export default loadCss;
-//requirejc.loadCss = cssAPI.load;
-//export default cssAPI.load;
-//cssAPI.load('/bower_components/bootstrap-daterangepicker/daterangepicker.css','succ');
+}
 //>>excludeEnd('excludeRequireCss')

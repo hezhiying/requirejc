@@ -1,7 +1,8 @@
 import {isEqualUrl} from './helpers';
 
 /*jshint esversion: 6 */
-function loadJs(src,func) {
+//入口
+export default function loadJs(src,func) {
 	//判断这个js文件存在直接执行回调
 	let scripts = document.getElementsByTagName('script') ;
 	for(let i in scripts){
@@ -20,4 +21,3 @@ function loadJs(src,func) {
 		}
 	};
 }
-export default loadJs;
