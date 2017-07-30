@@ -1,6 +1,7 @@
 RequireJC
 ============
 [![Build Status](https://travis-ci.org/hezhiying/requirejc.svg?branch=master)](https://travis-ci.org/hezhiying/requirejc)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
 
 动态加载js,css相关依赖文件
 
