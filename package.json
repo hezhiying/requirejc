@@ -1,7 +1,8 @@
 {
   "name": "requirejc",
-  "version": "2.0.0",
+  "version": "2.0.3",
   "description": "auto require utils",
+  "homepage": "https://github.com/hezhiying/requirejc",
   "private": true,
   "scripts": {
 	"dev": "npm run development",
