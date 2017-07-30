@@ -1,7 +1,6 @@
 {
   "name": "requirejc",
-  "version": "2.0.3",
-  "_release": "2.0.3",
+  "version": "2.0.4",
   "description": "auto load js and css",
   "main": "require.js",
   "authors": [
