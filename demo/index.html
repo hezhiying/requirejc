@@ -3,13 +3,15 @@
 <head>
 	<meta charset="UTF-8">
 	<title>RequireJC Demo</title>
-	<script src="../require.js"></script>
+	<script src="../requirejc.js"></script>
 </head>
 <body>
 <h1>Require Test</h1>
 <script>
+	//调试模式，每次加载不会有缓存问题
+	RequireJC.debug(true);
 	RequireJC.config({
-		ver    : '0.0.1',
+		ver    : 'v0.0.1',
 		baseUrl: '/test/',
 		paths: {
 			js1:'js1',

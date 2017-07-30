@@ -1,12 +1,10 @@
 import loadCss from './components/require-css.js';
 import loadJs from './components/require-js.js';
-import {array_wrap} from './components/helpers.js';
-import {parseURL} from './components/parseurl.js';
+import {array_wrap,isEqualUrl} from './components/helpers.js';
 'use strict';
 let _config = {
-	ver: '0.0.1', baseUrl: '', paths: {}, dep: {}
+	ver: 'v1.0.0', debug:false, baseUrl: '', paths: {}, dep: {}
 };
-
 /**
  * 修改配制参数
  * @param opts
@@ -30,6 +28,28 @@ function config(opts) {
 			delete _config.dep[key];
 		}
 	}
+}
+/**
+ * 修改或读取版本
+ * @param version
+ * @returns {*}
+ */
+function ver(version) {
+	if ('undefined' === typeof version) {
+		return _config['ver'];
+	}
+	return _config['ver'] = version;
+}
+/**
+ * 修改或读取调试模式
+ * @param mode
+ * @returns {*}
+ */
+function debug(mode) {
+	if ('undefined' === typeof mode) {
+		return _config['debug'];
+	}
+	return _config['debug'] = mode;
 }
 
 /**
@@ -76,7 +96,7 @@ function RequireJC(names, func) {
  */
 function loadJsOrCss(name, func) {
 	let url = toUrl(name);
-	if(!name){
+	if (!name) {
 		return func();
 	}
 	if (isJS(name)) {
@@ -110,7 +130,12 @@ function getDep(name) {
  * @returns {string}
  */
 function urlArgs(url) {
-	return url + '?ver=' + _config.ver;
+	let args = url + '?ver='+ _config.ver;
+	if(debug()){
+		let timestamp = Date.now || function () {return +new Date;};
+		args += '&debug='+timestamp();
+	}
+	return args;
 }
 
 /**
@@ -126,16 +151,6 @@ function addPath(name, path, dep) {
 	if (dep) {
 		_config.dep[name] = dep;
 	}
-}
-
-/**
- * 确定给定的两个URL是否相同
- * @param url1
- * @param url2
- * @returns {boolean}
- */
-function isEqualUrl(url1, url2) {
-	return parseURL(url1).relative === parseURL(url2).relative;
 }
 
 /**
@@ -181,4 +196,7 @@ RequireJC.toUrl       = toUrl;
 RequireJC.isEqualUrl  = isEqualUrl;
 RequireJC.loadJs      = loadJs;
 RequireJC.loadCss     = loadCss;
+RequireJC.addPath     = addPath;
+RequireJC.ver         = ver;
+RequireJC.debug       = debug;
 window.require        = window.RequireJC = window.requirejc = RequireJC;

@@ -13,7 +13,7 @@ bower install hezhiying/requirejc
 > 2.引入requirejc.js
 
 ```html
-	<script type="text/javascript" src="/bower_components/requirejc/requirejc.js"></script>
+<script type="text/javascript" src="/bower_components/requirejc/requirejc.js"></script>
 
 ```
 >
@@ -24,7 +24,9 @@ bower install hezhiying/requirejc
 ```javascript
 //全局配制
 RequireJC.config({
+    ver:'v0.0.1',//版本号会自动加在网址后面
     baseUrl:'/',
+    debug  : false,
     paths:{
     	js1:'js1.js',
     	js2:'js2.js'
@@ -45,6 +47,12 @@ RequireJC('js1',function(){
 RequireJC(['js1','http://localhost/xxx.css'],function(){
 	console.log('加载成功');
 })
+
+//其它方法
+RequireJC.ver(ver);//设置或读取版本号
+RequireJC.debug(debug);//设置或读取debug状态
+RequireJC.addPath(name,path,dep);
+RequireJC.toUrl(name); //获取实际加载的URL
 
 ```
 

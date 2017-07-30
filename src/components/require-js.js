@@ -1,10 +1,12 @@
+import {isEqualUrl} from './helpers';
+
 /*jshint esversion: 6 */
 function loadJs(src,func) {
 	//判断这个js文件存在直接执行回调
 	let scripts = document.getElementsByTagName('script') ;
 	for(let i in scripts){
-		if(requirejc.isEqualUrl(scripts[i].src,src))
-			return func() ;
+		if(scripts.hasOwnProperty(i) && isEqualUrl(scripts[i].src,src))
+			return func();
 	}
 	let script = document.createElement('script') ;
 	script.type ='text/javascript' ;

@@ -60,35 +60,61 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 0);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-module.exports = __webpack_require__(1);
+"use strict";
+/* harmony export (immutable) */ __webpack_exports__["a"] = array_wrap;
+/* harmony export (immutable) */ __webpack_exports__["b"] = isEqualUrl;
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__parseurl__ = __webpack_require__(5);
 
+
+/**
+ * 如果给定的值不是数组，则将其包装在一个数组中
+ * @param name
+ * @returns {[*]}
+ */
+function array_wrap(name) {
+  return 'string' === typeof name ? [name] : name;
+}
+
+/**
+ * 确定给定的两个URL是否相同
+ * @param url1
+ * @param url2
+ * @returns {boolean}
+ */
+function isEqualUrl(url1, url2) {
+  return Object(__WEBPACK_IMPORTED_MODULE_0__parseurl__["a" /* parseURL */])(url1).path === Object(__WEBPACK_IMPORTED_MODULE_0__parseurl__["a" /* parseURL */])(url2).path;
+}
 
 /***/ }),
 /* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(2);
+
+
+/***/ }),
+/* 2 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_require_css_js__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_require_js_js__ = __webpack_require__(3);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_helpers_js__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_parseurl_js__ = __webpack_require__(5);
-
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_require_css_js__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_require_js_js__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_helpers_js__ = __webpack_require__(0);
 
 
 
 'use strict';
 var _config = {
-	ver: '0.0.1', baseUrl: '', paths: {}, dep: {}
+	ver: 'v1.0.0', debug: false, baseUrl: '', paths: {}, dep: {}
 };
-
 /**
  * 修改配制参数
  * @param opts
@@ -112,6 +138,28 @@ function config(opts) {
 			delete _config.dep[_key];
 		}
 	}
+}
+/**
+ * 修改或读取版本
+ * @param version
+ * @returns {*}
+ */
+function ver(version) {
+	if ('undefined' === typeof version) {
+		return _config['ver'];
+	}
+	return _config['ver'] = version;
+}
+/**
+ * 修改或读取调试模式
+ * @param mode
+ * @returns {*}
+ */
+function debug(mode) {
+	if ('undefined' === typeof mode) {
+		return _config['debug'];
+	}
+	return _config['debug'] = mode;
 }
 
 /**
@@ -191,7 +239,14 @@ function getDep(name) {
  * @returns {string}
  */
 function urlArgs(url) {
-	return url + '?ver=' + _config.ver;
+	var args = url + '?ver=' + _config.ver;
+	if (debug()) {
+		var timestamp = Date.now || function () {
+			return +new Date();
+		};
+		args += '&debug=' + timestamp();
+	}
+	return args;
 }
 
 /**
@@ -207,16 +262,6 @@ function addPath(name, path, dep) {
 	if (dep) {
 		_config.dep[name] = dep;
 	}
-}
-
-/**
- * 确定给定的两个URL是否相同
- * @param url1
- * @param url2
- * @returns {boolean}
- */
-function isEqualUrl(url1, url2) {
-	return Object(__WEBPACK_IMPORTED_MODULE_3__components_parseurl_js__["a" /* parseURL */])(url1).relative === Object(__WEBPACK_IMPORTED_MODULE_3__components_parseurl_js__["a" /* parseURL */])(url2).relative;
 }
 
 /**
@@ -258,13 +303,16 @@ RequireJC.config = config;
 RequireJC.loadJsOrCss = loadJsOrCss;
 RequireJC.isJS = isJS;
 RequireJC.toUrl = toUrl;
-RequireJC.isEqualUrl = isEqualUrl;
+RequireJC.isEqualUrl = __WEBPACK_IMPORTED_MODULE_2__components_helpers_js__["b" /* isEqualUrl */];
 RequireJC.loadJs = __WEBPACK_IMPORTED_MODULE_1__components_require_js_js__["a" /* default */];
 RequireJC.loadCss = __WEBPACK_IMPORTED_MODULE_0__components_require_css_js__["a" /* default */];
+RequireJC.addPath = addPath;
+RequireJC.ver = ver;
+RequireJC.debug = debug;
 window.require = window.RequireJC = window.requirejc = RequireJC;
 
 /***/ }),
-/* 2 */
+/* 3 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -394,16 +442,19 @@ function loadCss(url, load) {
 //>>excludeEnd('excludeRequireCss')
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__helpers__ = __webpack_require__(0);
+
+
 /*jshint esversion: 6 */
 function loadJs(src, func) {
 	//判断这个js文件存在直接执行回调
 	var scripts = document.getElementsByTagName('script');
 	for (var i in scripts) {
-		if (requirejc.isEqualUrl(scripts[i].src, src)) return func();
+		if (scripts.hasOwnProperty(i) && Object(__WEBPACK_IMPORTED_MODULE_0__helpers__["b" /* isEqualUrl */])(scripts[i].src, src)) return func();
 	}
 	var script = document.createElement('script');
 	script.type = 'text/javascript';
@@ -418,21 +469,6 @@ function loadJs(src, func) {
 	};
 }
 /* harmony default export */ __webpack_exports__["a"] = (loadJs);
-
-/***/ }),
-/* 4 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (immutable) */ __webpack_exports__["a"] = array_wrap;
-/**
- * 如果给定的值不是数组，则将其包装在一个数组中
- * @param name
- * @returns {[*]}
- */
-function array_wrap(name) {
-  return 'string' === typeof name ? [name] : name;
-}
 
 /***/ }),
 /* 5 */
