@@ -115,6 +115,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 var _config = {
 	ver: 'v1.0.0', debug: false, baseUrl: '', paths: {}, dep: {}, map: undefined
 };
+
 /**
  * 修改配制参数
  * @param opts
@@ -522,15 +523,48 @@ function parseURL(url) {
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = loadJs;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__helpers__ = __webpack_require__(0);
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 
+function callback(func) {}
 /*jshint esversion: 6 */
 //入口
 function loadJs(src, func) {
 	//判断这个js文件存在直接执行回调
 	var scripts = document.getElementsByTagName('script');
+
+	var _loop = function _loop(i) {
+		if (scripts.hasOwnProperty(i) && Object(__WEBPACK_IMPORTED_MODULE_0__helpers__["b" /* isEqualUrl */])(scripts[i].src, src)) {
+			if (scripts[i].dataset.isLoad) {
+				return {
+					v: func()
+				};
+			} else {
+				//如果脚本还没有加载完全，后续脚本将等待最多10秒
+				var times = 0;
+				var ttl = 10000;
+				var stop = setInterval(function () {
+					times++;
+					if (scripts[i].dataset.isLoad) {
+						clearTimeout(stop);
+						return func();
+					}
+					if (times * 200 >= ttl) {
+						clearTimeout(stop);
+						throw new Error("脚本加载超时:[" + times * 200 + "ms] Script:[" + scripts[i].src + "]");
+					}
+				}, 200);
+				return {
+					v: void 0
+				};
+			}
+		}
+	};
+
 	for (var i in scripts) {
-		if (scripts.hasOwnProperty(i) && Object(__WEBPACK_IMPORTED_MODULE_0__helpers__["b" /* isEqualUrl */])(scripts[i].src, src)) return func();
+		var _ret = _loop(i);
+
+		if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
 	}
 	var script = document.createElement('script');
 	script.type = 'text/javascript';
@@ -539,6 +573,8 @@ function loadJs(src, func) {
 	head.appendChild(script);
 
 	script.onload = function () {
+		//标记脚本已加载
+		script.dataset.isLoad = true;
 		if ('function' === typeof func) {
 			func();
 		}
