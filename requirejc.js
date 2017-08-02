@@ -115,7 +115,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 var _config = {
 	ver: 'v1.0.0', debug: false, baseUrl: '', paths: {}, dep: {}, map: undefined
 };
-
 /**
  * 修改配制参数
  * @param opts
