@@ -1,9 +1,14 @@
 {
   "name": "requirejc",
-  "version": "2.1.0",
+  "version": "2.2.2",
   "description": "auto require utils",
   "homepage": "https://github.com/hezhiying/requirejc",
-  "private": true,
+  "main": "requirejc.min.js",
+  "private": false,
+  "author": {
+    "name": "zine",
+    "url": "https://github.com/hezhiying/requirejc"
+  },
   "scripts": {
 	"dev": "npm run development",
 	"development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
@@ -17,5 +22,9 @@
 	"cross-env": "^5.0.1",
 	"laravel-mix": "^1.0",
 	"lodash": "^4.17.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hezhiying/requirejc"
   }
 }
