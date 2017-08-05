@@ -209,4 +209,4 @@ RequireJC.loadCss     = loadCss;
 RequireJC.addPath     = addPath;
 RequireJC.ver         = ver;
 RequireJC.debug       = debug;
-window.require        = window.RequireJC = window.requirejc = RequireJC;
+window.RequireJC = RequireJC;

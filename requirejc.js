@@ -319,7 +319,7 @@ RequireJC.loadCss = __WEBPACK_IMPORTED_MODULE_0__components_require_css_js__["a"
 RequireJC.addPath = addPath;
 RequireJC.ver = ver;
 RequireJC.debug = debug;
-window.require = window.RequireJC = window.requirejc = RequireJC;
+window.RequireJC = RequireJC;
 
 /***/ }),
 /* 3 */
