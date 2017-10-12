@@ -75,6 +75,7 @@ function RequireJC(names, func) {
 		})
 	}
 
+	//提取要加载的JS
 	let name = names.shift();
 	if ('undefined' === typeof name) {
 		if ('function' === typeof func) {
@@ -105,6 +106,12 @@ function RequireJC(names, func) {
  * @returns {*}
  */
 function loadJsOrCss(name, func) {
+	//如果加载的是数组，则分别加载
+	let file = _config.paths[name];
+	if(typeof file === 'object'){
+		return RequireJC(file, func)
+	}
+	//加载JS css
 	let url = toUrl(name);
 	if (!name) {
 		return func();

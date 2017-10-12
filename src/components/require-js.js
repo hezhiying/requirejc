@@ -14,16 +14,20 @@ export default function loadJs(src, func) {
 			} else {
 				//如果脚本还没有加载完全，后续脚本将等待最多10秒
 				let times = 0;
-				let ttl   = 10000;
+				let ttl   = 5000;
 				let stop  = setInterval(function () {
 					times++;
 					if (scripts[i].dataset.isLoad) {
 						clearTimeout(stop);
 						return func();
 					}
+
+					//加载超时程序继续往下执行
 					if (times * 200 >= ttl) {
 						clearTimeout(stop);
-						throw new Error("脚本加载超时:[" + (times * 200) + "ms] Script:[" + scripts[i].src + "]");
+						console.warn("脚本加载超时:[" + (times * 200) + "ms] Script:[" + scripts[i].src + "]");
+						console.warn("可能这个脚本可能已经手动在网页上加载了");
+						return func();
 					}
 				}, 200);
 				return;

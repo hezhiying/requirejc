@@ -3,7 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<title>RequireJC Demo</title>
-	<script src="../requirejc.js"></script>
+	<script src="/test/js3.js" ></script>
+	<script src="../requirejc.js?baseUrl=/aba" name="requirejc"></script>
 </head>
 <body>
 <h1>Require Test</h1>
@@ -15,13 +16,13 @@
 		baseUrl: '/test/',
 		paths: {
 			js1:'js1',
-			js2:'js2.js',
+			js2:['js2.js','js3'],
 			js3:'js3.js',
 		},
 		dep  : {
 			js1:['js2','css!js1'],
-			js2:['js1'],
-			js3:['js2'],
+//			js2:['js1'],
+//			js3:['js2'],
 		},
 		map:'js4'
 	});

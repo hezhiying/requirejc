@@ -108,6 +108,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_require_css_js__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_require_js_js__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_helpers_js__ = __webpack_require__(0);
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 
 
 
@@ -185,6 +187,7 @@ function RequireJC(names, func) {
 		});
 	}
 
+	//提取要加载的JS
 	var name = names.shift();
 	if ('undefined' === typeof name) {
 		if ('function' === typeof func) {
@@ -214,6 +217,12 @@ function RequireJC(names, func) {
  * @returns {*}
  */
 function loadJsOrCss(name, func) {
+	//如果加载的是数组，则分别加载
+	var file = _config.paths[name];
+	if ((typeof file === 'undefined' ? 'undefined' : _typeof(file)) === 'object') {
+		return RequireJC(file, func);
+	}
+	//加载JS css
 	var url = toUrl(name);
 	if (!name) {
 		return func();
@@ -541,16 +550,20 @@ function loadJs(src, func) {
 			} else {
 				//如果脚本还没有加载完全，后续脚本将等待最多10秒
 				var times = 0;
-				var ttl = 10000;
+				var ttl = 5000;
 				var stop = setInterval(function () {
 					times++;
 					if (scripts[i].dataset.isLoad) {
 						clearTimeout(stop);
 						return func();
 					}
+
+					//加载超时程序继续往下执行
 					if (times * 200 >= ttl) {
 						clearTimeout(stop);
-						throw new Error("脚本加载超时:[" + times * 200 + "ms] Script:[" + scripts[i].src + "]");
+						console.warn("脚本加载超时:[" + times * 200 + "ms] Script:[" + scripts[i].src + "]");
+						console.warn("可能这个脚本可能已经手动在网页上加载了");
+						return func();
 					}
 				}, 200);
 				return {
