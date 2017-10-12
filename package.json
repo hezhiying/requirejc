@@ -1,6 +1,6 @@
 {
   "name": "requirejc",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "auto require utils",
   "homepage": "https://github.com/hezhiying/requirejc",
   "main": "requirejc.min.js",
